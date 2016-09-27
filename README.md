@@ -1,12 +1,12 @@
 # bme280-sensor
 
-Welcome to bme280-sensor, a Node.js I2C driver for the BME280 Humidity, Barometric Pressure, Temperature Sensor. 
+Welcome to bme280-sensor, a Node.js I2C driver for the BME280 Humidity, Barometric Pressure, Temperature Sensor. Adafruit sells a [BME280 breakout board](https://www.adafruit.com/product/2652) and [here is the datasheet](http://www.adafruit.com/datasheets/BST-BME280_DS001-10.pdf).
 
 This module uses [i2cb-bus](https://github.com/fivdi/i2c-bus) which should provide access with Node.js on Linux boards like the Raspberry Pi Zero, 1, 2, or 3, BeagleBone, BeagleBone Black, or Intel Edison.
 
 Note that while the BME280 device does report temperature, it is measured by the internal temperature sensor. This temperature value depends on the PCB temperature and sensor element self-heating. Therefore ambient temperature is typically reported above actual ambient temperature.
 
-This Node project needs to talk directly to the I2C bus requires access to /dev/i2c, so you will typically need run Node with elevated privileges.
+Since bme280-sensor needs to talk directly to the I2C bus and requires access to /dev/i2c, you will typically need run Node with elevated privileges.
 
 bme280-sensor plays well with Node.js 4.x and 6.x
 
@@ -16,13 +16,14 @@ Sensor initialization is broken out into a seperate function for explicit error 
 
 ```
 const BME280 = require('bme280-sensor');
-const bme280 = new BME280();
 
-// The BME280 constuctor options are optional. Default i2cBusNo 1, i2cAddress 0x77.
+// The BME280 constructor options are optional. Default i2cBusNo 1, i2cAddress 0x77.
 // 
 const options = { i2cBusNo : 1, i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() };
 
-bme280.init(options)
+const bme280 = new BME280(options);
+
+bme280.init()
   .then(result => {
      console.log(`BME280 initialization succeeded`);
      readSensorData();
