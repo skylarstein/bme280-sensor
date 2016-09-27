@@ -1,6 +1,6 @@
 {
   "name": "bme280-sensor",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A Node.js I2C driver for the BME280 Humidity, Barometric Pressure, and Temperature Sensor",
   "main": "BME280.js",
   "scripts": {
@@ -10,7 +10,18 @@
     "type": "git",
     "url": "git+https://github.com/skylarstein/bme280-sensor.git"
   },
-  "keywords": [],
+  "keywords": [
+    "BME280",
+    "Humidity",
+    "Pressure",
+    "Barometer",
+    "Temperature",
+    "Sensor",
+    "Adafruit",
+    "Raspberry",
+    "Pi",
+    "Beaglebone"
+  ],  
   "author": "Skylar Stein",
   "license": "MIT",
   "bugs": {
