@@ -8,7 +8,11 @@ Note that while the BME280 device does report temperature, it is measured by the
 
 This Node project needs to talk directly to the I2C bus requires access to /dev/i2c, so you will typically need run Node with elevated privileges.
 
+bme280-sensor plays well with Node.js 4.x and 6.x
+
 ## Example Code
+
+Sensor initialization is broken out into a seperate function for explicit error checking. BME280.init() and BME280.readSensorData() return promises (for better or worse).
 
 ```
 const BME280 = require('bme280-sensor');
@@ -19,28 +23,29 @@ const bme280 = new BME280();
 const options = { i2cBusNo : 1, i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() };
 
 bme280.init(options)
-  .then((result) => {
-     console.log('BME280 initialization succeeded');
+  .then(result => {
+     console.log(`BME280 initialization succeeded`);
      readSensorData();
   })
-  .catch((err) => console.error('BME280 initialization failed: ' + err));
+  .catch(err => console.error(`BME280 initialization failed: ${errr} `));
 
 const readSensorData = () => {
   bme280.readSensorData()
-    .then((data) => {
+    .then(data => {
       // temperature_C, pressure_hPa, and humidity are returned by default.
       // I'll also calculate some unit conversions for display purposes.
       //
       data['temperature_F'] = BME280.convertCelciusToFahrenheit(data.temperature_C);
       data['pressure_inHg'] = BME280.convertHectopascalToInchesOfMercury(data.pressure_hPa);
  
-      console.log('data = ' + JSON.stringify(data, null, 2));
+      console.log(`data = ${JSON.stringify(data, null, 2)}`);
     })
-    .catch((err) => console.log('BME280 read error: ' + err))
+    .catch(err => console.log(`BME280 read error: ${err}`))
 
   setTimeout(readSensorData, 2000);
 }
 ```
+
 ##Example Output
 
 ```
