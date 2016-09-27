@@ -23,7 +23,7 @@ const readSensorData = () => {
       data['temperature_F'] = BME280.convertCelciusToFahrenheit(data.temperature_C);
       data['pressure_inHg'] = BME280.convertHectopascalToInchesOfMercury(data.pressure_hPa);
  
-      console.log(JSON.stringify(data, null, 2));
+      console.log('data = ' + JSON.stringify(data, null, 2));
     })
     .catch((err) => console.log('BME280 read error: ' + err))
 
