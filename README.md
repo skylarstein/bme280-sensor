@@ -25,6 +25,8 @@ const options = { i2cBusNo   : 1,
 
 const bme280 = new BME280(options);
 
+// Initialize the BME280 and load the calibration values
+//
 bme280.init()
   .then(result => {
      console.log(`BME280 initialization succeeded`);
