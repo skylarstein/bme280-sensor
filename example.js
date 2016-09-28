@@ -2,12 +2,16 @@
 
 const BME280 = require('bme280-sensor');
 
-// The BME280 constructor options are optional. Default i2cBusNo 1, i2cAddress 0x77.
+// The BME280 constructor options are optional.
+// Defaults are i2cBusNo 1, i2cAddress 0x77.
 // 
-const options = { i2cBusNo : 1, i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() };
+const options = { i2cBusNo   : 1,
+                  i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() };
 
 const bme280 = new BME280(options);
 
+// Initialize the BME280 and load the calibration values
+//
 bme280.init()
   .then(result => {
      console.log(`BME280 initialization succeeded`);
@@ -30,4 +34,3 @@ const readSensorData = () => {
 
   setTimeout(readSensorData, 2000);
 }
-

@@ -17,9 +17,11 @@ Sensor initialization is broken out into a seperate function for explicit error 
 ```
 const BME280 = require('bme280-sensor');
 
-// The BME280 constructor options are optional. Default i2cBusNo 1, i2cAddress 0x77.
+// The BME280 constructor options are optional.
+// Default i2cBusNo 1, i2cAddress 0x77.
 // 
-const options = { i2cBusNo : 1, i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() };
+const options = { i2cBusNo   : 1,
+                  i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() };
 
 const bme280 = new BME280(options);
 
