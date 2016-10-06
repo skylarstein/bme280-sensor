@@ -17,7 +17,7 @@ bme280.init()
      console.log(`BME280 initialization succeeded`);
      readSensorData();
   })
-  .catch(err => console.error(`BME280 initialization failed: ${errr} `));
+  .catch(err => console.error(`BME280 initialization failed: ${err} `));
 
 const readSensorData = () => {
   bme280.readSensorData()
