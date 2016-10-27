@@ -1,6 +1,6 @@
 {
   "name": "bme280-sensor",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "A Node.js I2C driver for the BME280 Humidity, Barometric Pressure, and Temperature Sensor",
   "main": "BME280.js",
   "scripts": {
