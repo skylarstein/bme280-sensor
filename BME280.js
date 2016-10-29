@@ -18,7 +18,6 @@ class BME280 {
     this.I2C_ADDRESS_B   = 0x76;
     this.I2C_ADDRESS_A   = 0x77;
     this.CHIP_ID         = 0x58;
-    this.CHIP_ID_BME280  = 0x60;
 
     this.REGISTER_DIG_T1 = 0x88;
     this.REGISTER_DIG_T2 = 0x8A;
@@ -64,8 +63,8 @@ class BME280 {
           if(err) {
             return reject(err);
           }
-          else if(chipId != this.CHIP_ID && chipId != this.CHIP_ID_BME280) {
-            return reject(`Unexpected Chip ID: ${chipId}`);
+          else if(chipId != this.CHIP_ID && chipId != BME280.CHIP_ID_BME280()) {
+            return reject(`Unexpected Chip ID: 0x${chipId.toString(16)}`);
           }
           else {
             console.log('Found BME280 chip id 0x' + chipId.toString(16) + ' on bus i2c-' + this.i2cBusNo + ' address ' + '0x' + this.i2cAddress.toString(16));
@@ -199,7 +198,11 @@ class BME280 {
 
   static BME280_DEFAULT_I2C_ADDRESS() {
     return 0x77;
-  } 
+  }
+
+  static CHIP_ID_BME280() {
+    return 0x60;
+  }
 
   static int16(msb, lsb) {
     let val = BME280.uint16(msb, lsb);

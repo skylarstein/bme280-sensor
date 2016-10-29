@@ -1,10 +1,10 @@
 {
   "name": "bme280-sensor",
-  "version": "0.1.0",
-  "description": "A Node.js I2C driver for the BME280 Humidity, Barometric Pressure, and Temperature Sensor",
+  "version": "0.1.1",
+  "description": "A Node.js I2C module for the BME280 Humidity, Barometric Pressure, and Temperature Sensor",
   "main": "BME280.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
     "Raspberry",
     "Pi",
     "Beaglebone"
-  ],  
+  ],
   "author": "Skylar Stein",
   "license": "MIT",
   "bugs": {
@@ -29,6 +29,10 @@
   },
   "homepage": "https://github.com/skylarstein/bme280-sensor#readme",
   "dependencies": {
-    "i2c-bus": "^1.1.1"
+    "i2c-bus": "^1.1.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2"
   }
 }

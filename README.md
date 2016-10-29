@@ -1,14 +1,14 @@
-# bme280-sensor
+# bme280-sensor [![NPM version](https://img.shields.io/npm/v/bme280-sensor.svg)](https://www.npmjs.com/package/bme280-sensor)
 
-Welcome to bme280-sensor, a Node.js I2C driver for the BME280 Humidity, Barometric Pressure, Temperature Sensor. Adafruit sells a [BME280 breakout board](https://www.adafruit.com/product/2652) and [here is the datasheet](http://www.adafruit.com/datasheets/BST-BME280_DS001-10.pdf).
+Welcome to bme280-sensor, a Node.js I2C module for the BME280 Humidity, Barometric Pressure, Temperature Sensor. Adafruit sells a [BME280 breakout board](https://www.adafruit.com/product/2652) and [here is the datasheet](http://www.adafruit.com/datasheets/BST-BME280_DS001-10.pdf).
 
 This module uses [i2c-bus](https://github.com/fivdi/i2c-bus) which should provide access with Node.js on Linux boards like the Raspberry Pi Zero, 1, 2, or 3, BeagleBone, BeagleBone Black, or Intel Edison.
 
 Note that while the BME280 device does report temperature, it is measured by the internal temperature sensor. This temperature value depends on the PCB temperature and sensor element self-heating. Therefore ambient temperature is typically reported above actual ambient temperature.
 
-Since bme280-sensor needs to talk directly to the I2C bus and requires access to /dev/i2c, you will typically need run Node with elevated privileges.
+Since bme280-sensor needs to talk directly to the I2C bus and requires access to /dev/i2c, you will typically need run Node with elevated privileges or add your user account to the i2c group: ```$ sudo adduser $USER i2c```
 
-bme280-sensor plays well with Node.js 4.x and 6.x
+bme280-sensor plays well with Node.js 4.x through 7.x.
 
 ## Example Code
 
