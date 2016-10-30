@@ -24,6 +24,7 @@ describe('bme280-sensor', () => {
 
         bme280.readSensorData()
           .then((data) => {
+            console.log(`BME280 sensor data: ${JSON.stringify(data)}`);
             expect(data).to.have.all.keys('temperature_C', 'humidity', 'pressure_hPa');
             expect(data.temperature_C).to.be.within(-40, 85); // per Bosch BME280 datasheet operating range
             expect(data.humidity).to.be.within(0, 100); // per Bosch BME280 datasheet operating range

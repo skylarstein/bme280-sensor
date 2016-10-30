@@ -1,7 +1,7 @@
 /*
   BME280.js
 
-  A Node.js I2C driver for the BME280 Humidity, Barometric Pressure, and Temperature Sensor.
+  A Node.js I2C module for the Bosch BME280 Humidity, Barometric Pressure, and Temperature Sensor.
 */
 
 'use strict';
