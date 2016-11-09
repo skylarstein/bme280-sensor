@@ -36,7 +36,7 @@ describe('bme280-sensor', () => {
           });
       })
       .catch((err) => {
-        done(err)
+        done(err);
       });
   });
 });

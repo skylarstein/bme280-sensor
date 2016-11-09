@@ -67,10 +67,10 @@ class BME280 {
             return reject(`Unexpected Chip ID: 0x${chipId.toString(16)}`);
           }
           else {
-            console.log('Found BME280 chip id 0x' + chipId.toString(16) + ' on bus i2c-' + this.i2cBusNo + ' address ' + '0x' + this.i2cAddress.toString(16));
+            console.log(`Found BME280 chip id 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo} address 0x${this.i2cAddress.toString(16)}`);
             this.loadCalibration((err) => {
               if(err) {
-                return eject(err);
+                return reject(err);
               }
 
               this.i2cBus.writeByteSync(this.i2cAddress, this.REGISTER_CONTROL_HUM, 0x05); // 16x oversampling

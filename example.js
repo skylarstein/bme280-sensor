@@ -26,13 +26,13 @@ const readSensorData = () => {
       console.log(`BME280 read error: ${err}`);
       setTimeout(readSensorData, 2000);
     });
-}
+};
 
 // Initialize the BME280 sensor and load the calibration values
 //
 bme280.init()
   .then((result) => {
-     console.log(`BME280 initialization succeeded`);
-     readSensorData();
+    console.log('BME280 initialization succeeded');
+    readSensorData();
   })
   .catch((err) => console.error(`BME280 initialization failed: ${err} `));
