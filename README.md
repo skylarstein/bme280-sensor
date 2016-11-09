@@ -1,4 +1,4 @@
-# bme280-sensor [![Node.js versions](https://img.shields.io/badge/Node.js-4.x%20through%207.x-brightgreen.svg)](https://nodejs.org) [![NPM version](https://img.shields.io/npm/v/bme280-sensor.svg)](https://www.npmjs.com/package/bme280-sensor)
+# bme280-sensor [<img src="https://img.shields.io/badge/Node.js-4.x%20through%207.x-brightgreen.svg">](https://nodejs.org) [<img src="https://img.shields.io/npm/v/bme280-sensor.svg">](https://www.npmjs.com/package/bme280-sensor)
 
 Welcome to bme280-sensor, a Node.js I2C module for the Bosch BME280 Humidity, Barometric Pressure, Temperature Sensor. Adafruit sells a [BME280 breakout board](https://www.adafruit.com/product/2652) and [here is the datasheet](http://www.adafruit.com/datasheets/BST-BME280_DS001-10.pdf).
 
