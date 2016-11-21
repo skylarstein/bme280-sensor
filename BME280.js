@@ -110,69 +110,59 @@ class BME280 {
         return reject('You must first call bme280.init()');
       }
 
-      // Read temperature
+      // Grab temperature, humidity, and pressure in a single read
       //
-      // t_fine is required for both humidity and pressure regardless. Let's just read it all.
-      //
-      this.i2cBus.readI2cBlock(this.i2cAddress, this.REGISTER_TEMP_DATA, 3, new Buffer(3), (err, bytesRead, buffer) => {
+      this.i2cBus.readI2cBlock(this.i2cAddress, this.REGISTER_PRESSURE_DATA, 8, new Buffer(8), (err, bytesRead, buffer) => {
         if(err) {
           return reject(err);
         }
 
-        let adc_T = BME280.uint20(buffer[0], buffer[1], buffer[2]);
-        let var1 = ((((adc_T >> 3) - (this.cal.dig_T1 << 1))) * this.cal.dig_T2) >> 11;
-        let var2  = (((((adc_T >> 4) - this.cal.dig_T1) * ((adc_T >> 4) - this.cal.dig_T1)) >> 12) * this.cal.dig_T3) >> 14;
-        let t_fine = var1 + var2;
+        // Temperature (temperature first since we need t_fine for pressure and humidity)
+        //
+        let adc_T = BME280.uint20(buffer[3], buffer[4], buffer[5]);
+        let tvar1 = ((((adc_T >> 3) - (this.cal.dig_T1 << 1))) * this.cal.dig_T2) >> 11;
+        let tvar2  = (((((adc_T >> 4) - this.cal.dig_T1) * ((adc_T >> 4) - this.cal.dig_T1)) >> 12) * this.cal.dig_T3) >> 14;
+        let t_fine = tvar1 + tvar2;
 
         let temperature_C = ((t_fine * 5 + 128) >> 8) / 100;
 
-        // Read humidity
+        // Pressure
         //
-        this.i2cBus.readI2cBlock(this.i2cAddress, this.REGISTER_HUMIDITY_DATA, 2, new Buffer(2), (err, bytesRead, buffer) => {
-          if(err) {
-            return reject(err);
-          }
-          let adc_H = BME280.uint16(buffer[0], buffer[1]);
+        let adc_P = BME280.uint20(buffer[0], buffer[1], buffer[2]);
+        let pvar1 = t_fine / 2 - 64000;
+        let pvar2 = pvar1 * pvar1 * this.cal.dig_P6 / 32768;
+        pvar2 = pvar2 + pvar1 * this.cal.dig_P5 * 2;
+        pvar2 = pvar2 / 4 + this.cal.dig_P4 * 65536;
+        pvar1 = (this.cal.dig_P3 * pvar1 * pvar1 / 524288 + this.cal.dig_P2 * pvar1) / 524288;
+        pvar1 = (1 + pvar1 / 32768) * this.cal.dig_P1;
 
-          let h = t_fine - 76800;
-          h = (adc_H - (this.cal.dig_H4 * 64 + this.cal.dig_H5 / 16384 * h)) *
-              (this.cal.dig_H2 / 65536 * (1 + this.cal.dig_H6 / 67108864 * h * (1 + this.cal.dig_H3 / 67108864 * h)));
-          h = h * (1 - this.cal.dig_H1 * h / 524288);
+        let pressure_hPa = 0;
 
-          let humidity = (h > 100) ? 100 : (h < 0 ? 0 : h);
+        if(pvar1 !== 0) {
+          let p = 1048576 - adc_P;
+          p = ((p - pvar2 / 4096) * 6250) / pvar1;
+          pvar1 = this.cal.dig_P9 * p * p / 2147483648;
+          pvar2 = p * this.cal.dig_P8 / 32768;
+          p = p + (pvar1 + pvar2 + this.cal.dig_P7) / 16;
 
-          // Read pressure
-          //
-          this.i2cBus.readI2cBlock(this.i2cAddress, this.REGISTER_PRESSURE_DATA, 3, new Buffer(3), (err, bytesRead, buffer) => {
-            if(err) {
-              return reject(err);
-            }
+          pressure_hPa = p / 100;
+        }
 
-            let adc_P = BME280.uint20(buffer[0], buffer[1], buffer[2]);
-            let var1 = t_fine / 2 - 64000;
-            let var2 = var1 * var1 * this.cal.dig_P6 / 32768;
-            var2 = var2 + var1 * this.cal.dig_P5 * 2;
-            var2 = var2 / 4 + this.cal.dig_P4 * 65536;
-            var1 = (this.cal.dig_P3 * var1 * var1 / 524288 + this.cal.dig_P2 * var1) / 524288;
-            var1 = (1 + var1 / 32768) * this.cal.dig_P1;
+        // Humidity
+        //
+        let adc_H = BME280.uint16(buffer[6], buffer[7]);
 
-            let pressure_hPa = 0;
+        let h = t_fine - 76800;
+        h = (adc_H - (this.cal.dig_H4 * 64 + this.cal.dig_H5 / 16384 * h)) *
+            (this.cal.dig_H2 / 65536 * (1 + this.cal.dig_H6 / 67108864 * h * (1 + this.cal.dig_H3 / 67108864 * h)));
+        h = h * (1 - this.cal.dig_H1 * h / 524288);
 
-            if(var1 !== 0) {
-              let p = 1048576 - adc_P;
-              p = ((p - var2 / 4096) * 6250) / var1;
-              var1 = this.cal.dig_P9 * p * p / 2147483648;
-              var2 = p * this.cal.dig_P8 / 32768;
-              p = p + (var1 + var2 + this.cal.dig_P7) / 16;
+        let humidity = (h > 100) ? 100 : (h < 0 ? 0 : h);
 
-              pressure_hPa = p/100;
-            }
-
-            resolve({ temperature_C : temperature_C,
-                      humidity      : humidity,
-                      pressure_hPa  : pressure_hPa
-            });
-          });
+        resolve({
+          temperature_C : temperature_C,
+          humidity      : humidity,
+          pressure_hPa  : pressure_hPa
         });
       });
     });
