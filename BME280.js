@@ -63,11 +63,12 @@ class BME280 {
           if(err) {
             return reject(err);
           }
-          else if(chipId != this.CHIP_ID && chipId != BME280.CHIP_ID_BME280()) {
-            return reject(`Unexpected Chip ID: 0x${chipId.toString(16)}`);
+
+          else if(chipId !== BME280.CHIP_ID_BME280()) {
+            return reject(`Unexpected BME280 chip ID: 0x${chipId.toString(16)}`);
           }
           else {
-            console.log(`Found BME280 chip id 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo} address 0x${this.i2cAddress.toString(16)}`);
+            console.log(`Found BME280 chip ID 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo}, address 0x${this.i2cAddress.toString(16)}`);
             this.loadCalibration((err) => {
               if(err) {
                 return reject(err);
@@ -138,7 +139,7 @@ class BME280 {
 
             let pressure_hPa = 0;
 
-            if(var1 != 0) {
+            if(var1 !== 0) {
               let p = 1048576 - adc_P;
               p = ((p - var2 / 4096) * 6250) / var1;
               var1 = this.cal.dig_P9 * p * p / 2147483648;

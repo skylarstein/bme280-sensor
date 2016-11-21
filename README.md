@@ -7,33 +7,34 @@ Welcome to bme280-sensor, a Node.js I2C module for the Bosch BME280 Humidity, Ba
 
 This module uses [i2c-bus](https://github.com/fivdi/i2c-bus) which should provide access with Node.js on Linux boards like the Raspberry Pi Zero, 1, 2, or 3, BeagleBone, BeagleBone Black, or Intel Edison.
 
-Note that while the BME280 device does report temperature, it is measured by the internal temperature sensor. This temperature value depends on the PCB temperature and sensor element self-heating. Therefore ambient temperature is typically reported above actual ambient temperature.
+Note: While the BME280 device does report temperature, it is measured by the internal temperature sensor. This temperature value depends on the PCB temperature and sensor element self-heating. Therefore ambient temperature is typically reported above actual ambient temperature.
 
 Since bme280-sensor needs to talk directly to the I2C bus and requires access to /dev/i2c, you will typically need run Node with elevated privileges or add your user account to the i2c group: ```$ sudo adduser $USER i2c```
 
 ## Example Code
 
-Sensor initialization is broken out into a seperate function for explicit error checking. BME280.init() and BME280.readSensorData() return promises (for better or worse).
-
 ```
 const BME280 = require('bme280-sensor');
 
 // The BME280 constructor options are optional.
-// Defaults are i2cBusNo 1, i2cAddress 0x77.
 // 
-const options = { i2cBusNo   : 1,
-                  i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() };
+const options = {
+  i2cBusNo   : 1, // defaults to 1
+  i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS() // defaults to 0x77
+};
 
 const bme280 = new BME280(options);
 
+// Read BME280 sensor data, repeat
+//
 const readSensorData = () => {
   bme280.readSensorData()
     .then((data) => {
       // temperature_C, pressure_hPa, and humidity are returned by default.
       // I'll also calculate some unit conversions for display purposes.
       //
-      data['temperature_F'] = BME280.convertCelciusToFahrenheit(data.temperature_C);
-      data['pressure_inHg'] = BME280.convertHectopascalToInchesOfMercury(data.pressure_hPa);
+      data.temperature_F = BME280.convertCelciusToFahrenheit(data.temperature_C);
+      data.pressure_inHg = BME280.convertHectopascalToInchesOfMercury(data.pressure_hPa);
  
       console.log(`data = ${JSON.stringify(data, null, 2)}`);
       setTimeout(readSensorData, 2000);
@@ -44,10 +45,10 @@ const readSensorData = () => {
     });
 };
 
-// Initialize the BME280 sensor and load the calibration values
+// Initialize the BME280 sensor
 //
 bme280.init()
-  .then((result) => {
+  .then(() => {
     console.log('BME280 initialization succeeded');
     readSensorData();
   })
@@ -70,4 +71,4 @@ data = {
 ```
 ##Example Wiring
 
-For setup on a Raspberry Pi, take a look at my [pi-weather-station](https://github.com/skylarstein/pi-weather-station) project.
+For I2C setup on a Raspberry Pi, take a look at my [pi-weather-station](https://github.com/skylarstein/pi-weather-station) project.
