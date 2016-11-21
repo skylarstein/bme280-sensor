@@ -8,7 +8,8 @@ describe('bme280-sensor', () => {
   it('it should communicate with the device', (done) => {
     const bme280 = new BME280();
     expect(bme280).to.be.an.instanceof(BME280);
-    bme280.init()
+    bme280.reset()
+      .then(() => bme280.init())
       .then((chipId) => {
         expect(chipId).to.be.equal(BME280.CHIP_ID_BME280());
         done();

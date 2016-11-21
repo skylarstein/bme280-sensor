@@ -40,14 +40,11 @@ class BME280 {
     this.REGISTER_DIG_H5 = 0xE5;
     this.REGISTER_DIG_H6 = 0xE7;
 
-    this.REGISTER_CHIPID    = 0xD0;
-    this.REGISTER_VERSION   = 0xD1;
-    this.REGISTER_SOFTRESET = 0xE0;
-    this.REGISTER_CAL26     = 0xE1; // R calibration stored in 0xE1-0xF
+    this.REGISTER_CHIPID = 0xD0;
+    this.REGISTER_RESET  = 0xE0;
 
     this.REGISTER_CONTROL_HUM   = 0xF2;
     this.REGISTER_CONTROL       = 0xF4;
-    this.REGISTER_CONFIG        = 0xF5;
     this.REGISTER_PRESSURE_DATA = 0xF7;
     this.REGISTER_TEMP_DATA     = 0xFA;
     this.REGISTER_HUMIDITY_DATA = 0xFD;
@@ -74,13 +71,35 @@ class BME280 {
                 return reject(err);
               }
 
-              this.i2cBus.writeByteSync(this.i2cAddress, this.REGISTER_CONTROL_HUM, 0x05); // 16x oversampling
-              this.i2cBus.writeByteSync(this.i2cAddress, this.REGISTER_CONTROL, 0xB7); // 16x oversampling, normal mode
+              // Humidity 16x oversampling
+              //
+              this.i2cBus.writeByte(this.i2cAddress, this.REGISTER_CONTROL_HUM, 0b00000101, (err) => {
+                if(err) {
+                  return reject(err);
+                }
 
-              resolve(chipId);
+                // Temperture/pressure 16x oversampling, normal mode
+                //
+                this.i2cBus.writeByte(this.i2cAddress, this.REGISTER_CONTROL, 0b10110111, (err) => {
+                  err ? reject(err) : resolve(chipId);
+                });
+              });
             });
           }
         });
+      });
+    });
+  }
+
+  // reset()
+  //
+  // Perform a power-on reset procedure. You will need to call init() following a reset()
+  //
+  reset() {
+    return new Promise((resolve, reject) => {
+      const POWER_ON_RESET_CMD = 0xB6;
+      this.i2cBus.writeByte(this.i2cAddress, this.REGISTER_RESET, POWER_ON_RESET_CMD, (err) => {
+        err ? reject(err) : resolve();
       });
     });
   }
