@@ -61,11 +61,16 @@ class BME280 {
             return reject(err);
           }
 
-          else if(chipId !== BME280.CHIP_ID_BME280()) {
-            return reject(`Unexpected BME280 chip ID: 0x${chipId.toString(16)}`);
+          else if(chipId !== BME280.CHIP_ID_BME280() && 
+			chipId !== BME280.CHIP_ID1_BMP280() &&
+			chipId !== BME280.CHIP_ID2_BMP280() &&
+			chipId !== BME280.CHIP_ID3_BMP280()) {
+            return reject(`Unexpected BMx280 chip ID: 0x${chipId.toString(16)}`);
           }
+
           else {
-            console.log(`Found BME280 chip ID 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo}, address 0x${this.i2cAddress.toString(16)}`);
+            console.log(`Found BMx280 chip ID 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo},
+		address 0x${this.i2cAddress.toString(16)}`);
             this.loadCalibration((err) => {
               if(err) {
                 return reject(err);
@@ -208,6 +213,18 @@ class BME280 {
 
   static BME280_DEFAULT_I2C_ADDRESS() {
     return 0x77;
+  }
+
+  static CHIP_ID1_BMP280() {
+    return 0x56;
+  }
+
+  static CHIP_ID2_BMP280() {
+    return 0x57;
+  }
+
+  static CHIP_ID3_BMP280() {
+    return 0x58;
   }
 
   static CHIP_ID_BME280() {
