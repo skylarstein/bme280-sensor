@@ -30,10 +30,10 @@
   },
   "homepage": "https://github.com/skylarstein/bme280-sensor#readme",
   "dependencies": {
-    "i2c-bus": "^1.1.2"
+    "i2c-bus": "^1.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^3.1.2"
+    "mocha": "^3.2.0"
   }
 }
