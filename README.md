@@ -5,9 +5,11 @@
 
 Welcome to bme280-sensor, a Node.js I2C module for the Bosch BME280 Humidity, Barometric Pressure, Temperature Sensor. Adafruit sells a [BME280 breakout board](https://www.adafruit.com/product/2652) and [here is the datasheet](http://www.adafruit.com/datasheets/BST-BME280_DS001-10.pdf).
 
+If you are not interested in humidity, this module is also compatible with the lower cost [BMP280 Barometric Pressure and Temperature Sensor](https://www.adafruit.com/products/2651) which does not include a humidity sensor.
+
 This module uses [i2c-bus](https://github.com/fivdi/i2c-bus) which should provide access with Node.js on Linux boards like the Raspberry Pi Zero, 1, 2, or 3, BeagleBone, BeagleBone Black, or Intel Edison.
 
-Note: While the BME280 device does report temperature, it is measured by the internal temperature sensor. This temperature value depends on the PCB temperature and sensor element self-heating. Therefore ambient temperature is typically reported above actual ambient temperature.
+Note: While the BME280/BMP280 device does report temperature, it is measured by the internal temperature sensor. This temperature value depends on the PCB temperature and sensor element self-heating. Therefore ambient temperature is typically reported above actual ambient temperature.
 
 Since bme280-sensor needs to talk directly to the I2C bus and requires access to /dev/i2c, you will typically need run Node with elevated privileges or add your user account to the i2c group: ```$ sudo adduser $USER i2c```
 
