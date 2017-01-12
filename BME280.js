@@ -2,6 +2,8 @@
   BME280.js
 
   A Node.js I2C module for the Bosch BME280 Humidity, Barometric Pressure, and Temperature Sensor.
+
+  Support is also included for the Bosch BMP280 Barometric Pressure and Temperature Sensor.
 */
 
 'use strict';
@@ -61,16 +63,15 @@ class BME280 {
             return reject(err);
           }
 
-          else if(chipId !== BME280.CHIP_ID_BME280() && 
-			chipId !== BME280.CHIP_ID1_BMP280() &&
-			chipId !== BME280.CHIP_ID2_BMP280() &&
-			chipId !== BME280.CHIP_ID3_BMP280()) {
+          else if(chipId !== BME280.CHIP_ID_BME280() &&
+                  chipId !== BME280.CHIP_ID1_BMP280() &&
+                  chipId !== BME280.CHIP_ID2_BMP280() &&
+                  chipId !== BME280.CHIP_ID3_BMP280()) {
             return reject(`Unexpected BMx280 chip ID: 0x${chipId.toString(16)}`);
           }
 
           else {
-            console.log(`Found BMx280 chip ID 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo},
-		address 0x${this.i2cAddress.toString(16)}`);
+            console.log(`Found BMx280 chip ID 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo}, address 0x${this.i2cAddress.toString(16)}`);
             this.loadCalibration((err) => {
               if(err) {
                 return reject(err);
@@ -153,7 +154,7 @@ class BME280 {
           pressure_hPa = p / 100;
         }
 
-        // Humidity
+        // Humidity (available on the BME280, will be zero on the BMP280 since it has no humidity sensor)
         //
         let adc_H = BME280.uint16(buffer[6], buffer[7]);
 
