@@ -87,7 +87,7 @@ class BME280 {
                 // Temperture/pressure 16x oversampling, normal mode
                 //
                 this.i2cBus.writeByte(this.i2cAddress, this.REGISTER_CONTROL, 0b10110111, (err) => {
-                  err ? reject(err) : resolve(chipId);
+                  return err ? reject(err) : resolve(chipId);
                 });
               });
             });
@@ -105,7 +105,7 @@ class BME280 {
     return new Promise((resolve, reject) => {
       const POWER_ON_RESET_CMD = 0xB6;
       this.i2cBus.writeByte(this.i2cAddress, this.REGISTER_RESET, POWER_ON_RESET_CMD, (err) => {
-        err ? reject(err) : resolve();
+        return err ? reject(err) : resolve();
       });
     });
   }
